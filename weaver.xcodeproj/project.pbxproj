@@ -26,6 +26,9 @@
 			exceptions = (
 				7F3283573026F3E70039ABA4 /* Exceptions for "weaver" folder in "weaver" target */,
 			);
+			explicitFolders = (
+				Resources/Materials,
+			);
 			path = weaver;
 			sourceTree = "<group>";
 		};

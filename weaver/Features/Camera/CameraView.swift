@@ -1,3 +1,10 @@
+//
+//  CameraView.swift
+//  weaver
+//
+//  Created by esikmalazman on 08/08/2026.
+//
+
 import SwiftUI
 
 struct CameraView: View {

@@ -72,7 +72,7 @@ private struct ModePickerSegment: View {
 private struct NewRecordingButton: View {
     var body: some View {
         NavigationLink {
-            RecordingView()
+            CameraView()
         } label: {
             Text("New Recording")
                 .font(AppFont.headline)
