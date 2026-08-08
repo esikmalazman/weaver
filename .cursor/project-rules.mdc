@@ -15,7 +15,7 @@ alwaysApply: true
 
 - SwiftUI for frontend (Fallback with UIKit only if absolutely necessary)
 - Swift for code and logic
-- visionOS only
+- VisionOS only
 - Simple MVVM structure to organize code
 - Use a small Design System with:
   - Shared Typography
