@@ -21,7 +21,7 @@ alwaysApply: true
   - Shared Typography
   - Shared Colors
   - 4-point Spacing
-- Always use @swiftui-specialist skill for SwiftUI implementation
+- Always use @swiftui-specialist skill at @.agents/skills/swiftui-specialist/SKILL.md for SwiftUI implementation 
 
 # Swift specific rules
 

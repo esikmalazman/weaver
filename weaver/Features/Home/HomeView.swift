@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @State private var viewModel = HomeViewModel()
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                    newRecordingButton
-                    recentTechniquesSection
+                    NewRecordingButton()
+                    RecentTechniquesSection(techniques: viewModel.recentTechniques)
                 }
                 .padding(AppSpacing.lg)
             }
@@ -16,44 +16,65 @@ struct HomeView: View {
             .navigationTitle("CraftWeave")
         }
     }
+}
 
-    private var newRecordingButton: some View {
-        Button {
+private struct NewRecordingButton: View {
+    var body: some View {
+        NavigationLink {
+            RecordingView()
         } label: {
             Text("New Recording")
                 .font(AppFont.headline)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, AppSpacing.md)
         }
+        .buttonStyle(.plain)
         .background(AppColor.accent)
         .foregroundStyle(AppColor.background)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
+}
 
-    private var recentTechniquesSection: some View {
+private struct RecentTechniquesSection: View {
+    let techniques: [Technique]
+
+    var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack {
-                Text("Recent Techniques")
-                    .font(AppFont.title)
-                    .foregroundStyle(AppColor.textPrimary)
-                Spacer()
-                Button("View All") {
-                }
-                .font(AppFont.body)
-                .foregroundStyle(AppColor.accent)
-            }
+            RecentTechniquesHeader()
+            TechniqueListContent(techniques: techniques)
+        }
+    }
+}
 
-            if viewModel.recentTechniques.isEmpty {
-                Text("No techniques recorded yet.")
-                    .font(AppFont.body)
-                    .foregroundStyle(AppColor.textSecondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, AppSpacing.xl)
-            } else {
-                VStack(spacing: AppSpacing.sm) {
-                    ForEach(viewModel.recentTechniques) { technique in
-                        TechniqueRow(technique: technique)
-                    }
+private struct RecentTechniquesHeader: View {
+    var body: some View {
+        HStack {
+            Text("Recent Techniques")
+                .font(AppFont.title)
+                .foregroundStyle(AppColor.textPrimary)
+            Spacer()
+            Button("View All") {
+            }
+            .font(AppFont.body)
+            .foregroundStyle(AppColor.accent)
+        }
+    }
+}
+
+private struct TechniqueListContent: View {
+    let techniques: [Technique]
+
+    var body: some View {
+        if techniques.isEmpty {
+            Text("No techniques recorded yet.")
+                .font(AppFont.body)
+                .foregroundStyle(AppColor.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, AppSpacing.xl)
+        } else {
+            VStack(spacing: AppSpacing.sm) {
+                ForEach(techniques) { technique in
+                    TechniqueRow(technique: technique)
                 }
             }
         }

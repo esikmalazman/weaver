@@ -1,10 +1,11 @@
-import Combine
-import Foundation
+import Observation
 
-final class HomeViewModel: ObservableObject {
+@MainActor
+@Observable
+final class HomeViewModel {
     private let recentTechniquesLimit = 3
 
-    @Published private(set) var techniques: [Technique] = []
+    private(set) var techniques: [Technique] = []
 
     var recentTechniques: [Technique] {
         Array(techniques.prefix(recentTechniquesLimit))
