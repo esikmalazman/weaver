@@ -4,18 +4,22 @@
 
 CraftWeave is an Apple Vision Pro app that helps weaving artisans record and preserve their weaving techniques.
 
-An artisan can record their hand and finger movements while weaving, add voice explanations at important moments, and save the recording as a 3D learning reference.
+An artisan can record their **hand movements and voice explanations** while weaving. The app saves the hand joint movement data as a JSON file and saves voice recordings separately.
 
-The main user for the MVP is the **weaving artisan**. The app helps artisans document their knowledge so it can be replayed and shared with future learners.
+The recorded data can later be replayed using a **3D hand model**, allowing the artisan to review the weaving movement.
+
+The main user for the MVP is the **weaving artisan**.
+
+The MVP focuses on recording and replaying the artisan's hand movements. It does not use the Apple Vision Pro main camera.
 
 ---
 
 # 2. Main Goals
 
-1. Help artisans easily record their weaving techniques.
-2. Help artisans explain important steps using voice notes.
-3. Preserve the recorded weaving process for future learning.
-4. Make it easy for artisans to review their own recordings.
+1. Help artisans easily record their weaving hand movements.
+2. Allow artisans to add voice explanations during recording.
+3. Save hand movement data so it can be replayed later.
+4. Replay the recorded movement using a 3D hand model.
 5. Keep the recording process simple and quick.
 
 ---
@@ -28,7 +32,7 @@ As an artisan, I want to start a new recording so that I can document a weaving 
 
 ## US-002
 
-As an artisan, I want to record my hand and finger movements so that the weaving technique can be replayed later.
+As an artisan, I want to record my hand and finger movements so that I can replay the technique later.
 
 ## US-003
 
@@ -48,11 +52,11 @@ As an artisan, I want to see my saved recordings so that I can review techniques
 
 ## US-007
 
-As an artisan, I want to replay a recording in 3D so that I can check whether the recorded movement was captured correctly.
+As an artisan, I want to replay my hand movements using a 3D hand model so that I can review the recorded technique.
 
 ## US-008
 
-As an artisan, I want to see where I added voice notes so that I can understand the explanations connected to each movement.
+As an artisan, I want to see when I added voice notes so that I can listen to the explanation at the correct moment.
 
 ---
 
@@ -64,7 +68,7 @@ As an artisan, I want to see where I added voice notes so that I can understand 
 
 Starts a new weaving technique recording.
 
-The app prepares the camera and recording area.
+The app starts tracking the artisan's hands.
 
 ### When it appears
 
@@ -74,7 +78,7 @@ When the artisan taps "New Recording".
 
 Show:
 
-"Unable to start recording."
+"Unable to start hand tracking."
 
 Allow the artisan to try again.
 
@@ -84,9 +88,11 @@ Allow the artisan to try again.
 
 ### What it does
 
-Records the artisan's hand and finger movements while weaving.
+Records the position and rotation of the artisan's hand joints.
 
-The app captures the movement as 3D data for later replay.
+The app records the movement over time.
+
+The movement data is saved as JSON.
 
 ### When it appears
 
@@ -96,19 +102,19 @@ After the artisan starts a new recording.
 
 Show:
 
-"Movement recording stopped."
+"Hand movement could not be recorded."
 
 Allow the artisan to try again.
 
 ---
 
-## F-003 Add Voice Note
+## F-003 Record Voice Note
 
 ### What it does
 
 Lets the artisan record a short voice explanation.
 
-The voice note is connected to the point in the movement recording where it was created.
+The voice note is connected to a specific point in the movement recording.
 
 Example:
 
@@ -116,7 +122,7 @@ Example:
 
 ### When it appears
 
-While recording or reviewing a recording.
+While recording.
 
 ### If something goes wrong
 
@@ -140,7 +146,7 @@ During a recording.
 
 ### If something goes wrong
 
-Keep the recorded movement up to the last successful point.
+Keep the movement data recorded before the problem happened.
 
 ---
 
@@ -148,13 +154,15 @@ Keep the recorded movement up to the last successful point.
 
 ### What it does
 
-Saves the recorded movement and voice notes on the Apple Vision Pro
+Saves the recorded hand movement data and voice recordings.
 
-The artisan gives the recording a name.
+The artisan gives the technique a name.
 
 Example:
 
 "Basic Songket Weaving"
+
+The hand movement data is saved as a JSON file.
 
 ### When it appears
 
@@ -198,7 +206,9 @@ Show:
 
 ### What it does
 
-Replays the recorded hand and finger movements in 3D.
+Replays the recorded hand movements using a 3D hand model.
+
+The app reads the saved JSON file and applies the recorded joint positions and rotations to the 3D hand.
 
 The artisan can:
 
@@ -225,7 +235,7 @@ Show:
 
 Shows markers on the replay timeline where the artisan added voice notes.
 
-The artisan can tap a marker to hear the explanation.
+The artisan can select a marker to hear the explanation.
 
 ### When it appears
 
@@ -261,8 +271,8 @@ This is the first screen when opening the app.
 
 ### What is on the screen
 
-* Camera recording area.
-* Hand movement preview.
+* Hand tracking status.
+* 3D hand preview.
 * Recording timer.
 * Voice note button.
 * Pause button.
@@ -324,7 +334,7 @@ Tap a technique from S-004.
 
 ### What is on the screen
 
-* 3D hand movement.
+* 3D hand model.
 * Play button.
 * Pause button.
 * Replay timeline.
@@ -338,72 +348,95 @@ Tap "Replay" from S-005.
 
 # 6. Data
 
-## D-001
+## D-001 — Recording
 
-Recorded weaving technique.
+Information about one weaving recording.
 
 Contains:
 
 * Technique name.
 * Recording date.
 * Recording length.
-* Hand and finger movement data.
+* Hand movement data.
+* Voice notes.
 
 ---
 
-## D-002
+## D-002 — Hand Joint Data
 
-Voice notes.
+The movement information recorded from the artisan's hands.
+
+Each recorded moment contains:
+
+* Timestamp.
+* Left hand joint data.
+* Right hand joint data.
+* Joint position.
+* Joint rotation.
+
+This data is saved as JSON.
+
+---
+
+## D-003 — Voice Notes
+
+Information about each voice note.
 
 Contains:
 
-* Voice recording.
+* Audio file.
+* Start time.
+* End time.
 * Position in the movement recording.
-* Recording length.
 
 ---
 
-## D-003
-
-Saved technique list.
+## D-004 — Saved Techniques
 
 A list of all techniques recorded by the artisan.
 
 ---
 
-## D-004
+## D-005 — Playback Information
 
-3D movement data.
-
-The hand and finger movement information needed to replay the technique.
-
----
-
-## D-005
-
-Recording playback information.
+Information needed while replaying a technique.
 
 Contains:
 
 * Current playback position.
-* Voice note positions.
 * Playback state.
+* Voice note positions.
 
 ---
 
-## D-006
+## D-006 — Local Files
 
-Local recording storage.
+The app stores the recording files on the Apple Vision Pro.
 
-The recorded movement and voice notes are saved on the iPhone.
+Example:
+
+```text
+Technique/
+├── basic-songket-weaving.json
+├── voice-note-001.m4a
+└── voice-note-002.m4a
+```
+
+The JSON file contains the hand movement data.
+
+The audio files contain the artisan's voice notes.
 
 ---
 
 ## D-007 — Data Source and Storage Rules
 
-* Movement recordings are created by the artisan using the iPhone.
+* Hand movement data comes from Apple's hand tracking system.
+* Hand movement data is collected using `HandTrackingProvider`.
+* The app does not access the main camera.
+* Hand movement data is saved as JSON.
 * Voice notes are recorded by the artisan.
-* Recordings are stored locally on the iPhone.
+* Voice notes are saved as audio files.
+* Recording data is stored locally on the Apple Vision Pro.
 * The MVP does not require an internet connection.
 * The MVP does not require a user account.
 * The MVP does not require cloud storage.
@@ -413,6 +446,7 @@ The recorded movement and voice notes are saved on the iPhone.
 # 7. Extra Details
 
 * Build using Swift and SwiftUI.
+* Build for Apple Vision Pro / visionOS.
 * Use a simple MVVM structure.
 * Use a small Design System.
 * The Design System should contain:
@@ -421,21 +455,26 @@ The recorded movement and voice notes are saved on the iPhone.
   * Colors
   * 4-point Spacing
 * Support Light Mode and Dark Mode.
-* Camera permission is required for movement recording.
 * Microphone permission is required for voice notes.
+* Hand tracking requires ARKit hand-tracking authorization.
+* Camera permission is **not required**.
+* Main camera access is **not required**.
 * Location permission is not required.
 * The app should work offline.
-* Recordings should remain on the iPhone.
+* Recordings should remain on the Apple Vision Pro.
 * No learner account or social features are needed for the MVP.
 * No cloud sharing is needed for the MVP.
-* The MVP focuses on **artisan recording**, not learner browsing.
-* The 3D replay is mainly used by the artisan to check and review their recorded technique.
+* The MVP focuses on **artisan recording and replay**, not learner browsing.
+* The hand movement JSON is used to drive a 3D hand model during replay.
+* The MVP records scheduled hand-joint updates rather than video.
+
+Apple provides `HandTrackingProvider` specifically for receiving live hand and joint data, and its `HandAnchor` contains the hand skeleton used for tracking.
 
 ---
 
 # 8. Build Steps
 
-* **B-001**: Create the iOS project in Xcode using SwiftUI.
+* **B-001**: Create the visionOS project in Xcode using SwiftUI.
 
 * **B-002**: Setup the basic Design System.
 
@@ -449,83 +488,102 @@ The recorded movement and voice notes are saved on the iPhone.
   * Add recent techniques.
   * Add "View All".
 
-* **B-004**: Build **S-002 (Recording Screen)**.
+* **B-004**: Setup hand tracking using **ARKit `HandTrackingProvider`**.
 
-* **B-005**: Add **F-001 (Start Recording)**.
+  * Request the required hand-tracking authorization.
+  * Start the hand tracking session.
+  * Read left and right hand joint data.
 
-  * Request camera permission.
-  * Prepare the recording area.
-  * Start the recording timer.
+* **B-005**: Build **S-002 (Recording Screen)**.
+
+  * Show hand tracking status.
+  * Show a simple 3D hand preview.
+  * Add recording timer.
+  * Add voice note button.
+  * Add pause button.
+  * Add stop button.
 
 * **B-006**: Add **F-002 (Record Hand Movement)**.
 
-  * Capture hand and finger movement.
-  * Store the movement data.
-  * Show the movement preview.
+  * Read hand joint updates.
+  * Record each update with a timestamp.
+  * Save joint positions.
+  * Save joint rotations.
 
-* **B-007**: Add **F-003 (Add Voice Note)**.
+* **B-007**: Add JSON recording.
+
+  * Convert the recorded hand movement data into JSON.
+  * Save the JSON file locally.
+  * Make sure the JSON can be loaded again for replay.
+
+* **B-008**: Add **F-003 (Record Voice Note)**.
 
   * Request microphone permission.
   * Record the artisan's voice.
-  * Save the voice note position.
+  * Save the audio file.
+  * Save the voice note start and end time.
 
-* **B-008**: Add **F-004 (Pause and Stop Recording)**.
+* **B-009**: Add **F-004 (Pause and Stop Recording)**.
 
   * Allow the artisan to pause.
+  * Allow the artisan to continue.
   * Allow the artisan to stop.
-  * Keep the recorded data.
+  * Keep all successfully recorded data.
 
-* **B-009**: Build **S-003 (Save Recording Screen)**.
-
-* **B-010**: Add **F-005 (Save Technique)** using **D-001, D-002, and D-006**.
+* **B-010**: Build **S-003 (Save Recording Screen)**.
 
   * Enter technique name.
-  * Save movement data.
-  * Save voice notes.
+  * Preview recording information.
+  * Save or delete the recording.
 
-* **B-011**: Build **S-004 (Technique Library)** using **D-003**.
+* **B-011**: Add **F-005 (Save Technique)** using **D-001, D-002, D-003, and D-006**.
 
-* **B-012**: Build **S-005 (Technique Details)**.
+* **B-012**: Build **S-004 (Technique Library)** using **D-004**.
 
-* **B-013**: Build **S-006 (3D Replay Screen)**.
+* **B-013**: Build **S-005 (Technique Details)**.
 
-* **B-014**: Add **F-007 (3D Replay)** using **D-004 and D-005**.
+* **B-014**: Build **S-006 (3D Replay Screen)**.
 
-  * Play movement.
-  * Pause movement.
-  * Replay movement.
+  * Load the saved JSON file.
+  * Create the 3D hand model.
+  * Prepare the hand joints for animation.
+
+* **B-015**: Add **F-007 (3D Replay)** using **D-002 and D-005**.
+
+  * Read the JSON movement data.
+  * Move the 3D hand according to the recorded joint data.
+  * Play the movement in the correct time order.
+  * Pause the movement.
+  * Replay the movement.
   * Move through the timeline.
 
-* **B-015**: Add **F-008 (Voice Note Markers)**.
+* **B-016**: Add **F-008 (Voice Note Markers)**.
 
-  * Show markers on the timeline.
-  * Allow the artisan to play each voice note.
+  * Show markers based on the saved voice note timestamps.
+  * Allow the artisan to select a marker.
+  * Play the corresponding audio recording.
 
-* **B-016**: Add basic error handling.
+* **B-017**: Add basic error handling.
 
-  * Camera permission denied.
+  * Hand tracking unavailable.
+  * Hand tracking permission denied.
   * Microphone permission denied.
-  * Movement recording fails.
-  * Voice recording fails.
-  * Recording cannot be saved.
+  * Hand movement recording fails.
+  * JSON cannot be saved.
+  * Audio cannot be saved.
+  * Recording cannot be loaded.
   * Recording cannot be replayed.
 
-* **B-017**: Test the full artisan workflow.
+* **B-018**: Test the full artisan workflow.
 
   * Start recording.
-  * Record movement.
+  * Track hand movement.
   * Add voice notes.
   * Stop recording.
   * Save technique.
   * Open saved technique.
-  * Replay movement.
+  * Replay the hand movement.
+  * Play voice notes.
 
-* **B-018**: Improve the UI.
 
-  * Check spacing.
-  * Check typography.
-  * Check Light Mode.
-  * Check Dark Mode.
-  * Check accessibility.
-
-* **B-019**: Prepare the MVP for TestFlight.
+* **B-020**: Prepare the MVP for TestFlight.
