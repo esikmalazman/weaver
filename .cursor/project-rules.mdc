@@ -15,13 +15,13 @@ alwaysApply: true
 
 - SwiftUI for frontend (Fallback with UIKit only if absolutely necessary)
 - Swift for code and logic
-- visionOS only
+- VisionOS only
 - Simple MVVM structure to organize code
 - Use a small Design System with:
   - Shared Typography
   - Shared Colors
   - 4-point Spacing
-- Always use @swiftui-specialist skill for SwiftUI implementation
+- Always use @swiftui-specialist skill at @.agents/skills/swiftui-specialist/SKILL.md for SwiftUI implementation 
 
 # Swift specific rules
 
