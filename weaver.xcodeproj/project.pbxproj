@@ -26,6 +26,9 @@
 			exceptions = (
 				7F3283573026F3E70039ABA4 /* Exceptions for "weaver" folder in "weaver" target */,
 			);
+			explicitFolders = (
+				Resources/Materials,
+			);
 			path = weaver;
 			sourceTree = "<group>";
 		};
@@ -270,6 +273,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weaver/Info.plist;
 				INFOPLIST_KEY_NSHandsTrackingUsageDescription = "CraftWeave uses hand tracking to record your hand and finger movements while weaving.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record voice with hand-tracking sessions for synchronized 3D replay.";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.esikmalazman.weaver;
@@ -298,6 +302,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weaver/Info.plist;
 				INFOPLIST_KEY_NSHandsTrackingUsageDescription = "CraftWeave uses hand tracking to record your hand and finger movements while weaving.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record voice with hand-tracking sessions for synchronized 3D replay.";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.esikmalazman.weaver;

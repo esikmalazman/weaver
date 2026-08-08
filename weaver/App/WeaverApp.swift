@@ -3,11 +3,13 @@ import SwiftUI
 @main
 struct WeaverApp: App {
     @State private var recordingViewModel = RecordingViewModel()
-
+    @State private var appModel = AppModel()
+    
     var body: some Scene {
         WindowGroup(id: WeaverWindow.main) {
             HomeView()
                 .environment(recordingViewModel)
+                .environment(appModel)
         }
 
         WindowGroup(id: WeaverWindow.model3D) {
@@ -34,6 +36,19 @@ struct WeaverApp: App {
             return WindowPlacement()
         }
 
+        ImmersiveSpace(id: appModel.immersiveSpaceID) {
+            ImmersiveView()
+                .environment(appModel)
+                .onAppear {
+                    appModel.immersiveSpaceState = .open
+                }
+                .onDisappear {
+                    appModel.immersiveSpaceState = .closed
+                }
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        .upperLimbVisibility(.visible)
+        
         ImmersiveSpace(id: RecordingImmersiveSpace.id) {
             RecordingImmersiveView()
                 .environment(recordingViewModel)
