@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct cameraApp: App {
+struct cameraApp: App { //change to WeaverApp
 
     @State private var appModel = AppModel()
 
