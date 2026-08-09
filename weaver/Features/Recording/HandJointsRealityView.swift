@@ -27,12 +27,12 @@ struct HandJointsRealityView: View {
         let offset = recenterOnWrist ? wristOffset(in: frame) : .zero
         var currentKeys: Set<String> = []
 
-        for joint in frame.leftHandJoints {
+        for joint in frame.leftHandJoints where joint.jointName != .forearmArm {
             let key = "left_\(joint.jointName)"
             currentKeys.insert(key)
             place(joint, key: key, offset: offset, in: content)
         }
-        for joint in frame.rightHandJoints {
+        for joint in frame.rightHandJoints where joint.jointName != .forearmArm {
             let key = "right_\(joint.jointName)"
             currentKeys.insert(key)
             place(joint, key: key, offset: offset, in: content)

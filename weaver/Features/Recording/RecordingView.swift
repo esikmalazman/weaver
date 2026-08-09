@@ -6,12 +6,20 @@ struct RecordingView: View {
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
 
+    @State private var techniqueName = ""
+
     var body: some View {
         VStack(spacing: AppSpacing.xl) {
             HandPreviewArea(phase: viewModel.phase, frame: viewModel.latestFrame)
             RecordingTimerDisplay(text: viewModel.formattedElapsedTime)
+            TechniqueNameField(name: $techniqueName)
+            LiveTranscriptPreview(transcript: viewModel.liveTranscript)
             Spacer()
-            RecordingControls()
+            RecordingControls(
+                canSave: canSave,
+                saveAction: saveTechnique,
+                stopAction: { dismiss() }
+            )
         }
         .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -42,6 +50,11 @@ struct RecordingView: View {
         }
     }
 
+    private var canSave: Bool {
+        !techniqueName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !viewModel.handMovementFrames.isEmpty
+    }
+
     /// Hand tracking can only run inside an open ImmersiveSpace, so the space
     /// must open before RecordingViewModel starts the ARKit session.
     private func beginRecording() async {
@@ -51,6 +64,11 @@ struct RecordingView: View {
             return
         }
         await viewModel.startRecording()
+    }
+
+    private func saveTechnique() {
+        guard viewModel.saveTechnique(named: techniqueName) != nil else { return }
+        dismiss()
     }
 
     private func endRecording() {
@@ -152,15 +170,52 @@ private struct RecordingTimerDisplay: View {
     }
 }
 
+private struct TechniqueNameField: View {
+    @Binding var name: String
+
+    var body: some View {
+        TextField("Technique name", text: $name)
+            .font(AppFont.body)
+            .textFieldStyle(.roundedBorder)
+            .submitLabel(.done)
+    }
+}
+
+private struct LiveTranscriptPreview: View {
+    let transcript: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            Text("Transcript")
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textSecondary)
+            Text(transcript.isEmpty ? "Listening for artisan narration…" : transcript)
+                .font(AppFont.body)
+                .foregroundStyle(transcript.isEmpty ? AppColor.textSecondary : AppColor.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(3)
+        }
+        .padding(AppSpacing.md)
+        .background(AppColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppColor.border, lineWidth: 1)
+        )
+    }
+}
+
 private struct RecordingControls: View {
+    let canSave: Bool
+    let saveAction: () -> Void
+    let stopAction: () -> Void
+
     var body: some View {
         HStack(spacing: AppSpacing.xl) {
-            ControlButton(systemImage: "mic.fill", label: "Voice Note") {
-            }
+            ControlButton(systemImage: "square.and.arrow.down.fill", label: "Save", isEnabled: canSave, action: saveAction)
             ControlButton(systemImage: "pause.fill", label: "Pause") {
             }
-            ControlButton(systemImage: "stop.fill", label: "Stop") {
-            }
+            ControlButton(systemImage: "stop.fill", label: "Stop", action: stopAction)
         }
     }
 }
@@ -168,6 +223,7 @@ private struct RecordingControls: View {
 private struct ControlButton: View {
     let systemImage: String
     let label: String
+    var isEnabled = true
     let action: () -> Void
 
     var body: some View {
@@ -175,7 +231,7 @@ private struct ControlButton: View {
             VStack(spacing: AppSpacing.xs) {
                 Image(systemName: systemImage)
                     .font(.system(size: 20))
-                    .foregroundStyle(AppColor.textPrimary)
+                    .foregroundStyle(isEnabled ? AppColor.textPrimary : AppColor.textSecondary)
                     .frame(width: 56, height: 56)
                     .background(AppColor.surface)
                     .clipShape(Circle())
@@ -188,6 +244,8 @@ private struct ControlButton: View {
             }
         }
         .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .opacity(isEnabled ? 1 : 0.55)
     }
 }
 

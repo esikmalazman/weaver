@@ -8,7 +8,7 @@ enum HomeMode: String, CaseIterable, Identifiable {
 }
 
 struct HomeView: View {
-    @State private var viewModel = HomeViewModel()
+    @Environment(RecordingViewModel.self) private var recordingViewModel
     @State private var mode: HomeMode = .artisan
 
     var body: some View {
@@ -19,9 +19,11 @@ struct HomeView: View {
 
                     if mode == .artisan {
                         NewRecordingButton()
+                    } else {
+                        LearnerVideosSection()
                     }
 
-                    RecentTechniquesSection(mode: mode, techniques: viewModel.recentTechniques)
+                    TechniqueLibrarySection(techniques: recordingViewModel.savedTechniques)
                 }
                 .padding(AppSpacing.lg)
             }
@@ -84,41 +86,41 @@ private struct NewRecordingButton: View {
     }
 }
 
-private struct RecentTechniquesSection: View {
-    let mode: HomeMode
+private struct LearnerVideosSection: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            SectionHeader(title: "Learner Videos")
+            LearnerVideoRow(video: .weaving)
+        }
+    }
+}
+
+private struct TechniqueLibrarySection: View {
     let techniques: [Technique]
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            RecentTechniquesHeader()
-            TechniqueListContent(mode: mode, techniques: techniques)
+            SectionHeader(title: "Technique Library")
+            TechniqueLibraryContent(techniques: techniques)
         }
     }
 }
 
-private struct RecentTechniquesHeader: View {
+private struct SectionHeader: View {
+    let title: LocalizedStringResource
+
     var body: some View {
-        HStack {
-            Text("Recent Techniques")
-                .font(AppFont.title)
-                .foregroundStyle(AppColor.textPrimary)
-            Spacer()
-            Button("View All") {
-            }
-            .font(AppFont.body)
-            .foregroundStyle(AppColor.accent)
-        }
+        Text(title)
+            .font(AppFont.title)
+            .foregroundStyle(AppColor.textPrimary)
     }
 }
 
-private struct TechniqueListContent: View {
-    let mode: HomeMode
+private struct TechniqueLibraryContent: View {
     let techniques: [Technique]
 
     var body: some View {
-        if mode == .learner {
-            LearnerVideoRow(video: .weaving)
-        } else if techniques.isEmpty {
+        if techniques.isEmpty {
             Text("No techniques recorded yet.")
                 .font(AppFont.body)
                 .foregroundStyle(AppColor.textSecondary)
@@ -167,27 +169,39 @@ private struct TechniqueRow: View {
     let technique: Technique
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.xs) {
-            Text(technique.name)
-                .font(AppFont.headline)
-                .foregroundStyle(AppColor.textPrimary)
+        NavigationLink {
+            TechniqueReplayScreen(technique: technique)
+        } label: {
+            HStack(spacing: AppSpacing.md) {
+                Image(systemName: "play.circle.fill")
+                    .font(.system(size: 24))
+                    .foregroundStyle(AppColor.accent)
 
-            HStack {
-                Text(technique.date, style: .date)
+                VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                    Text(technique.name)
+                        .font(AppFont.headline)
+                        .foregroundStyle(AppColor.textPrimary)
+
+                    HStack {
+                        Text(technique.date, style: .date)
+                        Text(formattedDuration)
+                    }
+                    .font(AppFont.caption)
+                    .foregroundStyle(AppColor.textSecondary)
+                }
+
                 Spacer()
-                Text(formattedDuration)
             }
-            .font(AppFont.caption)
-            .foregroundStyle(AppColor.textSecondary)
+            .padding(AppSpacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColor.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(AppColor.border, lineWidth: 1)
+            )
         }
-        .padding(AppSpacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColor.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(AppColor.border, lineWidth: 1)
-        )
+        .buttonStyle(.plain)
     }
 
     private var formattedDuration: String {
@@ -199,4 +213,5 @@ private struct TechniqueRow: View {
 
 #Preview {
     HomeView()
+        .environment(RecordingViewModel())
 }
