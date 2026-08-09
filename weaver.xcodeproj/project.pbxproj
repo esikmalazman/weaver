@@ -6,10 +6,6 @@
 	objectVersion = 90;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		7F3983D430285A2100B600B6 /* FocusEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 7F3983D330285A2100B600B6 /* FocusEntity */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* weaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -42,7 +38,6 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				7F3983D430285A2100B600B6 /* FocusEntity in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -81,9 +76,6 @@
 				000000000000000000000010 /* weaver */,
 			);
 			name = weaver;
-			packageProductDependencies = (
-				7F3983D330285A2100B600B6 /* FocusEntity */,
-			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* weaver.app */;
 			productType = "com.apple.product-type.application";
@@ -113,7 +105,6 @@
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				7F3983D230285A2100B600B6 /* XCRemoteSwiftPackageReference "FocusEntity" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -354,25 +345,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		7F3983D230285A2100B600B6 /* XCRemoteSwiftPackageReference "FocusEntity" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maxxfrazer/FocusEntity.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		7F3983D330285A2100B600B6 /* FocusEntity */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7F3983D230285A2100B600B6 /* XCRemoteSwiftPackageReference "FocusEntity" */;
-			productName = FocusEntity;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }
