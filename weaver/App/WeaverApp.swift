@@ -17,6 +17,7 @@ struct WeaverApp: App {
         }
         .windowStyle(.volumetric)
         .defaultSize(width: 0.3, height: 0.3, depth: 0.3, in: .meters)
+        .defaultLaunchBehavior(.suppressed)
         .defaultWindowPlacement { _, context in
             if let mainWindow = context.windows.first(where: { $0.id == WeaverWindow.main }) {
                 return WindowPlacement(.trailing(mainWindow))

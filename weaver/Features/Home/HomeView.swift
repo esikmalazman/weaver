@@ -1,71 +1,120 @@
 import SwiftUI
 
-enum HomeMode: String, CaseIterable, Identifiable {
-    case artisan = "Artisan"
-    case learner = "Learner"
+enum HomeMode: CaseIterable, Identifiable {
+    case artisan
+    case learner
 
-    var id: String { rawValue }
+    var id: Self { self }
+
+    var title: LocalizedStringResource {
+        switch self {
+        case .artisan: "Artisan"
+        case .learner: "Learner"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .artisan: "person.fill"
+        case .learner: "graduationcap.fill"
+        }
+    }
 }
 
 struct HomeView: View {
-    @Environment(RecordingViewModel.self) private var recordingViewModel
-    @State private var mode: HomeMode = .artisan
-
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                    ModePicker(selection: $mode)
-
-                    if mode == .artisan {
-                        NewRecordingButton()
-                    } else {
-                        LearnerVideosSection()
-                    }
-
-                    TechniqueLibrarySection(techniques: recordingViewModel.savedTechniques)
-                }
-                .padding(AppSpacing.lg)
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                SectionHeader(title: "Choose Role")
+                RoleSelectionRow()
             }
-            .background(AppColor.background)
+            .padding(AppSpacing.xl)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .navigationTitle("CraftWeave")
         }
     }
 }
 
-private struct ModePicker: View {
-    @Binding var selection: HomeMode
-
+private struct RoleSelectionRow: View {
     var body: some View {
-        HStack(spacing: AppSpacing.xs) {
+        HStack(spacing: AppSpacing.xl) {
             ForEach(HomeMode.allCases) { mode in
-                ModePickerSegment(mode: mode, isSelected: selection == mode) {
-                    selection = mode
-                }
+                RoleCard(mode: mode)
             }
         }
-        .padding(AppSpacing.xs)
-        .background(AppColor.surface)
-        .clipShape(Capsule())
+        .frame(maxHeight: .infinity)
     }
 }
 
-private struct ModePickerSegment: View {
+private struct RoleCard: View {
     let mode: HomeMode
-    let isSelected: Bool
-    let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Text(mode.rawValue)
-                .font(AppFont.body)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, AppSpacing.sm)
+        NavigationLink {
+            destination
+        } label: {
+            RoleCardLabel(title: mode.title, icon: mode.icon)
         }
         .buttonStyle(.plain)
-        .background(isSelected ? AppColor.accent : Color.clear)
-        .foregroundStyle(isSelected ? AppColor.background : AppColor.textSecondary)
-        .clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    private var destination: some View {
+        switch mode {
+        case .artisan: ArtisanHomeView()
+        case .learner: LearnerHomeView()
+        }
+    }
+}
+
+private struct RoleCardLabel: View {
+    let title: LocalizedStringResource
+    let icon: String
+
+    var body: some View {
+        VStack(spacing: AppSpacing.md) {
+            Image(systemName: icon)
+                .font(.system(size: 48))
+                .foregroundStyle(AppColor.accent)
+            Text(title)
+                .font(AppFont.headline)
+                .foregroundStyle(AppColor.textPrimary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AppColor.surface.opacity(0.7))
+        .glassBackgroundEffect(in: .rect(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(AppColor.border, lineWidth: 1.5)
+        )
+        .hoverEffect()
+    }
+}
+
+private struct ArtisanHomeView: View {
+    @Environment(RecordingViewModel.self) private var recordingViewModel
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                NewRecordingButton()
+                TechniqueLibrarySection(techniques: recordingViewModel.savedTechniques)
+            }
+            .padding(AppSpacing.lg)
+        }
+        .navigationTitle("Artisan")
+    }
+}
+
+private struct LearnerHomeView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                LearnerVideosSection()
+            }
+            .padding(AppSpacing.lg)
+        }
+        .navigationTitle("Learner")
     }
 }
 
@@ -77,12 +126,10 @@ private struct NewRecordingButton: View {
             Text("New Recording")
                 .font(AppFont.headline)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, AppSpacing.md)
         }
-        .buttonStyle(.plain)
-        .background(AppColor.accent)
-        .foregroundStyle(AppColor.background)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .buttonStyle(.borderedProminent)
+        .controlSize(.extraLarge)
+        .tint(AppColor.accent)
     }
 }
 
@@ -154,12 +201,13 @@ private struct LearnerVideoRow: View {
             }
             .padding(AppSpacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColor.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(AppColor.surface.opacity(0.7))
+            .glassBackgroundEffect(in: .rect(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(AppColor.border, lineWidth: 1)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(AppColor.border, lineWidth: 1)
             )
+            .hoverEffect()
         }
         .buttonStyle(.plain)
     }
@@ -194,12 +242,13 @@ private struct TechniqueRow: View {
             }
             .padding(AppSpacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColor.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(AppColor.surface.opacity(0.7))
+            .glassBackgroundEffect(in: .rect(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(AppColor.border, lineWidth: 1)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(AppColor.border, lineWidth: 1)
             )
+            .hoverEffect()
         }
         .buttonStyle(.plain)
     }
