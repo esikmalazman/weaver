@@ -27,14 +27,12 @@ final class SpeechTranscriptionSession {
 
         let inputNode = audioEngine.inputNode
         let format = inputNode.outputFormat(forBus: 0)
-        if #available(visionOS 27.0, *) {
-            try inputNode.installAudioTap(onBus: 0, bufferSize: 1024, format: format) { [weak request] buffer, _ in
-                request?.append(AVAudioPCMBuffer(copying: buffer))
-            }
-        } else {
-            inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak request] buffer, _ in
-                request?.append(buffer)
-            }
+        inputNode.installTap(
+            onBus: 0,
+            bufferSize: 1024,
+            format: format
+        ) { [weak request] buffer, _ in
+            request?.append(buffer)
         }
 
         audioEngine.prepare()

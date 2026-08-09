@@ -12,7 +12,7 @@ struct LearnerObjectLibraryWindow: View {
         )
         .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(AppColor.surface.opacity(0.28))
+        .background(AppColor.surface.opacity(0.16))
         .glassBackgroundEffect(in: .rect(cornerRadius: 24, style: .continuous))
         .onAppear {
             viewModel.markObjectLibraryWindowOpen()
@@ -38,13 +38,15 @@ private struct ObjectLibraryPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
-            Text("Craft Object Library")
+            Text("Appears in")
                 .font(AppFont.title)
                 .foregroundStyle(AppColor.textPrimary)
 
             Text(title)
                 .font(AppFont.caption)
                 .foregroundStyle(AppColor.textSecondary)
+
+            TapToView3DCue()
 
             ScrollView {
                 LazyVStack(spacing: AppSpacing.md) {
@@ -70,31 +72,30 @@ private struct ObjectLibraryCard: View {
             Image(object.image)
                 .resizable()
                 .scaledToFill()
-                .frame(height: 120)
+                .frame(height: 160)
                 .frame(maxWidth: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            HStack(alignment: .center, spacing: AppSpacing.sm) {
                 Text(object.name)
                     .font(AppFont.headline)
                     .foregroundStyle(AppColor.textPrimary)
                     .lineLimit(2)
-                Text(object.type)
+
+                Spacer()
+
+                Label("3D", systemImage: "cube")
                     .font(AppFont.caption)
-                    .foregroundStyle(AppColor.textSecondary)
-                ObjectLibraryMetadataText(label: "Pattern", value: object.pattern)
-                ObjectLibraryMetadataText(label: "Material", value: object.material)
-                ObjectLibraryMetadataText(label: "Location", value: object.location)
-                Text(object.description)
-                    .font(AppFont.caption)
-                    .foregroundStyle(AppColor.textSecondary)
-                    .lineLimit(3)
-                    .padding(.top, AppSpacing.xs)
+                    .foregroundStyle(AppColor.textPrimary)
+                    .padding(.horizontal, AppSpacing.sm)
+                    .padding(.vertical, AppSpacing.xs)
+                    .background(AppColor.accent.opacity(0.35))
+                    .clipShape(Capsule())
             }
         }
         .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColor.surface.opacity(0.42))
+        .background(AppColor.surface.opacity(0.28))
         .glassBackgroundEffect(in: .rect(cornerRadius: 16, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -104,20 +105,21 @@ private struct ObjectLibraryCard: View {
     }
 }
 
-private struct ObjectLibraryMetadataText: View {
-    let label: String
-    let value: String
-
+private struct TapToView3DCue: View {
     var body: some View {
-        HStack(spacing: AppSpacing.xs) {
-            Text(label)
-                .foregroundStyle(AppColor.textSecondary)
-            Text(value)
-                .foregroundStyle(AppColor.textPrimary)
-                .lineLimit(1)
+        Label("Tap an object to view in 3D", systemImage: "hand.tap")
+            .font(AppFont.caption)
+            .foregroundStyle(AppColor.textPrimary)
+            .padding(.horizontal, AppSpacing.md)
+            .padding(.vertical, AppSpacing.sm)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColor.accent.opacity(0.2))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(AppColor.border.opacity(0.7), lineWidth: 1)
+            }
         }
-        .font(AppFont.caption)
-    }
 }
 
 #Preview {

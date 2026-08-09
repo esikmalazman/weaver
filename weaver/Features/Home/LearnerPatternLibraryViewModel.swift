@@ -11,11 +11,17 @@ final class LearnerPatternLibraryViewModel {
     }
 
     private(set) var patterns: [Pattern] = []
+    private(set) var objects: [RattanObject] = []
     private(set) var loadState = LoadState.loading
 
     private let loader: LearnerLibraryLoader
 
-    init(loader: LearnerLibraryLoader = LearnerLibraryLoader()) {
+    init() {
+        self.loader = LearnerLibraryLoader()
+        loadLibrary()
+    }
+
+    init(loader: LearnerLibraryLoader) {
         self.loader = loader
         loadLibrary()
     }
@@ -24,11 +30,31 @@ final class LearnerPatternLibraryViewModel {
         do {
             let library = try loader.load()
             patterns = Self.orderedLearnerPatterns(from: library.patterns)
+            objects = library.objects
             loadState = .loaded
         } catch {
             patterns = []
+            objects = []
             loadState = .failed("Unable to load pattern library.")
         }
+    }
+
+    func objects(for pattern: Pattern) -> [RattanObject] {
+        pattern.objectIds.compactMap { objectID in
+            objects.first { $0.id == objectID }
+        }
+    }
+
+    func videoURL(for pattern: Pattern) -> URL? {
+        loader.videoURL(for: pattern.learningMedia.video2D.resource)
+    }
+
+    func patternAnimationURL(for pattern: Pattern) -> URL? {
+        loader.patternAnimationURL(for: pattern.learningMedia.animation3D.resource)
+    }
+
+    func objectModelURL(for object: RattanObject) -> URL? {
+        loader.objectModelURL(for: object.model)
     }
 
     private static func orderedLearnerPatterns(from patterns: [Pattern]) -> [Pattern] {
