@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 2,
+  "patterns": [
+    {
+      "id": "PAT_001",
+      "name": "Plain Weave",
+      "thumbnail": "pattern_plain_weave",
+      "description": "An alternating over-one, under-one weave that produces a regular grid.",
+      "technique": "Plaiting",
+      "structure": "1/1",
+      "difficulty": "Beginner",
+      "learningMedia": {
+        "video2D": {
+          "resource": "plain_weave_video.mp4",
+          "type": "video"
+        },
+        "animation3D": {
+          "resource": "plain_weave_animation.usdz",
+          "type": "usdz"
+        }
+      },
+      "objectIds": [
+        "OBJ_004",
+        "OBJ_005",
+        "OBJ_006",
+        "OBJ_007",
+        "OBJ_008",
+        "OBJ_009"
+      ]
+    },
+    {
+      "id": "PAT_002",
+      "name": "Twill Weave",
+      "thumbnail": "pattern_twill_weave",
+      "description": "A weave formed through repeated offsets that create a visible diagonal rhythm.",
+      "technique": "Twill",
+      "structure": "2/2",
+      "difficulty": "Intermediate",
+      "learningMedia": {
+        "video2D": {
+          "resource": "twill_weave_video.mp4",
+          "type": "video"
+        },
+        "animation3D": {
+          "resource": "twill_weave_animation.usdz",
+          "type": "usdz"
+        }
+      },
+      "objectIds": [
+        "OBJ_010",
+        "OBJ_011",
+        "OBJ_012"
+      ]
+    },
+    {
+      "id": "PAT_003",
+      "name": "Octagonal Weave",
+      "thumbnail": "pattern_octagonal_weave",
+      "description": "An open lattice weave characterised by repeating octagonal openings.",
+      "technique": "Plaiting",
+      "structure": "Open lattice",
+      "difficulty": "Intermediate",
+      "learningMedia": {
+        "video2D": {
+          "resource": "octagonal_weave_video.mp4",
+          "type": "video"
+        },
+        "animation3D": {
+          "resource": "octagonal_weave_animation.usdz",
+          "type": "usdz"
+        }
+      },
+      "objectIds": [
+        "OBJ_001",
+        "OBJ_002",
+        "OBJ_003"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "id": "OBJ_001",
+      "name": "Rocking Horse",
+      "type": "Rocking Horse",
+      "model": "rocking_horse_oct.usdz",
+      "image": "rocking_horse_oct",
+      "pattern": "Octagonal Weave",
+      "patternId": "PAT_003",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan rocking horse incorporating octagonal woven elements."
+    },
+    {
+      "id": "OBJ_002",
+      "name": "Rattan Stool",
+      "type": "Stool",
+      "model": "stool_oct.usdz",
+      "image": "stool_oct",
+      "pattern": "Octagonal Weave",
+      "patternId": "PAT_003",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan stool featuring an octagonal woven surface."
+    },
+    {
+      "id": "OBJ_003",
+      "name": "Rattan Tray",
+      "type": "Tray",
+      "model": "tray_oct.usdz",
+      "image": "tray_oct",
+      "pattern": "Octagonal Weave",
+      "patternId": "PAT_003",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan tray featuring an octagonal woven surface."
+    },
+    {
+      "id": "OBJ_004",
+      "name": "Oval Basket",
+      "type": "Basket",
+      "model": "basket_oval.usdz",
+      "image": "basket_oval",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Oval rattan basket with a plain woven body."
+    },
+    {
+      "id": "OBJ_005",
+      "name": "Square Basket",
+      "type": "Basket",
+      "model": "basket_square.usdz",
+      "image": "basket_square",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Square rattan basket with a plain woven body."
+    },
+    {
+      "id": "OBJ_006",
+      "name": "Rattan Lounge Chair",
+      "type": "Chair",
+      "model": "loungechair_plain.usdz",
+      "image": "loungechair_plain",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan lounge chair incorporating plain woven surfaces."
+    },
+    {
+      "id": "OBJ_007",
+      "name": "Rattan Pillow",
+      "type": "Pillow",
+      "model": "rattan_pillow.usdz",
+      "image": "rattan_pillow",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Compact three-dimensional woven rattan pillow."
+    },
+    {
+      "id": "OBJ_008",
+      "name": "Rocking Horse",
+      "type": "Rocking Horse",
+      "model": "rocking_horse_plain.usdz",
+      "image": "rocking_horse_plain",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan rocking horse incorporating plain woven elements."
+    },
+    {
+      "id": "OBJ_009",
+      "name": "Round Rattan Table",
+      "type": "Table",
+      "model": "table_round.usdz",
+      "image": "table_round",
+      "pattern": "Plain Weave",
+      "patternId": "PAT_001",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Round rattan table with a plain woven cylindrical body."
+    },
+    {
+      "id": "OBJ_010",
+      "name": "Dining Chair A",
+      "type": "Chair",
+      "model": "dining_chair_twill_a.usdz",
+      "image": "dining_chair_twill_a",
+      "pattern": "Twill Weave",
+      "patternId": "PAT_002",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan dining chair featuring a twill woven surface."
+    },
+    {
+      "id": "OBJ_011",
+      "name": "Dining Chair B",
+      "type": "Chair",
+      "model": "dining_chair_twill_b.usdz",
+      "image": "dining_chair_twill_b",
+      "pattern": "Twill Weave",
+      "patternId": "PAT_002",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan dining chair featuring a twill woven surface."
+    },
+    {
+      "id": "OBJ_012",
+      "name": "Rattan Stool",
+      "type": "Stool",
+      "model": "stool_twill.usdz",
+      "image": "stool_twill",
+      "pattern": "Twill Weave",
+      "patternId": "PAT_002",
+      "material": "Rattan",
+      "location": "Singapore",
+      "description": "Rattan stool featuring a twill woven seat."
+    }
+  ]
+}

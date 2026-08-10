@@ -41,8 +41,6 @@ struct CameraView: View {
                     Label("Replay", systemImage: "play.circle")
                 }
                 .disabled(handSession.savedRecordings.isEmpty || handSession.state != .idle)
-
-                ToggleImmersiveSpaceButton()
             }
 
             Text(handSession.statusText)
@@ -56,6 +54,12 @@ struct CameraView: View {
         }
         .padding(32)
         .frame(minWidth: 620, minHeight: 520)
+        .onDisappear {
+            if handSession.state == .playing {
+                handSession.stop()
+            }
+            handSession.clearReplayPreview()
+        }
     }
 
     private var header: some View {

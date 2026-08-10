@@ -48,6 +48,10 @@ final class HandSessionController {
         state == .recording || state == .playing
     }
 
+    func clearReplayPreview() {
+        currentReplayFrame = nil
+    }
+    
     func startRecording() async {
         guard state == .idle else { return }
 

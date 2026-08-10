@@ -4,20 +4,45 @@ import SwiftUI
 struct WeaverApp: App {
     @State private var recordingViewModel = RecordingViewModel()
     @State private var appModel = AppModel()
+    @State private var learner3DViewModel = Learner3DViewModel()
+    @State private var practiceViewModel = PracticeViewModel()
+    @State private var audioManager = AppAudioManager()
     
     var body: some Scene {
         WindowGroup(id: WeaverWindow.main) {
             HomeView()
                 .environment(recordingViewModel)
                 .environment(appModel)
+                .environment(learner3DViewModel)
+                .environment(practiceViewModel)
+                .environment(audioManager)
         }
 
         WindowGroup(id: WeaverWindow.model3D) {
             Model3DPlaceholderWindow()
+                .environment(learner3DViewModel)
         }
         .windowStyle(.volumetric)
-        .defaultSize(width: 0.3, height: 0.3, depth: 0.3, in: .meters)
+        .defaultSize(width: 0.34, height: 0.42, depth: 0.34, in: .meters)
+        .defaultLaunchBehavior(.suppressed)
         .defaultWindowPlacement { _, context in
+            if let mainWindow = context.windows.first(where: { $0.id == WeaverWindow.main }) {
+                return WindowPlacement(.trailing(mainWindow))
+            }
+            return WindowPlacement()
+        }
+
+        WindowGroup(id: WeaverWindow.objectLibrary) {
+            LearnerObjectLibraryWindow()
+                .environment(learner3DViewModel)
+        }
+        .defaultSize(width: 360, height: 620)
+        .defaultLaunchBehavior(.suppressed)
+        .restorationBehavior(.disabled)
+        .defaultWindowPlacement { _, context in
+            if let modelWindow = context.windows.first(where: { $0.id == WeaverWindow.model3D }) {
+                return WindowPlacement(.trailing(modelWindow))
+            }
             if let mainWindow = context.windows.first(where: { $0.id == WeaverWindow.main }) {
                 return WindowPlacement(.trailing(mainWindow))
             }
@@ -30,6 +55,9 @@ struct WeaverApp: App {
         .defaultLaunchBehavior(.suppressed)
         .restorationBehavior(.disabled)
         .defaultWindowPlacement { _, context in
+            if let objectLibraryWindow = context.windows.first(where: { $0.id == WeaverWindow.objectLibrary }) {
+                return WindowPlacement(.trailing(objectLibraryWindow))
+            }
             if let modelWindow = context.windows.first(where: { $0.id == WeaverWindow.model3D }) {
                 return WindowPlacement(.trailing(modelWindow))
             }
@@ -54,5 +82,12 @@ struct WeaverApp: App {
                 .environment(recordingViewModel)
         }
         .immersionStyle(selection: .constant(.mixed), in: .mixed)
+
+        ImmersiveSpace(id: PracticeImmersiveSpace.id) {
+            PracticeImmersiveView()
+                .environment(practiceViewModel)
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        .upperLimbVisibility(.visible)
     }
 }
