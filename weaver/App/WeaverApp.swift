@@ -5,6 +5,7 @@ struct WeaverApp: App {
     @State private var recordingViewModel = RecordingViewModel()
     @State private var appModel = AppModel()
     @State private var learner3DViewModel = Learner3DViewModel()
+    @State private var practiceViewModel = PracticeViewModel()
     
     var body: some Scene {
         WindowGroup(id: WeaverWindow.main) {
@@ -12,6 +13,7 @@ struct WeaverApp: App {
                 .environment(recordingViewModel)
                 .environment(appModel)
                 .environment(learner3DViewModel)
+                .environment(practiceViewModel)
         }
 
         WindowGroup(id: WeaverWindow.model3D) {
@@ -78,5 +80,12 @@ struct WeaverApp: App {
                 .environment(recordingViewModel)
         }
         .immersionStyle(selection: .constant(.mixed), in: .mixed)
+
+        ImmersiveSpace(id: PracticeImmersiveSpace.id) {
+            PracticeImmersiveView()
+                .environment(practiceViewModel)
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        .upperLimbVisibility(.visible)
     }
 }

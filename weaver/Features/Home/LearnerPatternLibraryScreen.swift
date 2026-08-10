@@ -492,6 +492,9 @@ private struct PatternDetailMainPane: View {
                     difficulty: pattern.difficulty
                 )
                 Pattern3DSection(showPatternAnimationAction: showPatternAnimationAction)
+                if pattern.name == "Plain Weave" {
+                    PlainWeavePracticeSection()
+                }
                 PatternVideoSection(videoURL: videoURL)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -586,6 +589,27 @@ private struct Pattern3DSection: View {
 
             Button(action: showPatternAnimationAction) {
                 Label("Return to Pattern Animation", systemImage: "arrow.uturn.backward")
+                    .font(AppFont.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .tint(AppColor.accent)
+        }
+    }
+}
+
+private struct PlainWeavePracticeSection: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text("Practice Mode")
+                .font(AppFont.title)
+                .foregroundStyle(AppColor.textPrimary)
+
+            NavigationLink {
+                PracticeView()
+            } label: {
+                Label("Practice Plain Weave", systemImage: "hand.point.up.left.fill")
                     .font(AppFont.headline)
                     .frame(maxWidth: .infinity)
             }
