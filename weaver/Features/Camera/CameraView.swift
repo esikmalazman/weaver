@@ -41,8 +41,6 @@ struct CameraView: View {
                     Label("Replay", systemImage: "play.circle")
                 }
                 .disabled(handSession.savedRecordings.isEmpty || handSession.state != .idle)
-
-                ToggleImmersiveSpaceButton()
             }
 
             Text(handSession.statusText)
