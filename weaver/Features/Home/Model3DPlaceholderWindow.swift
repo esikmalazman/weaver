@@ -64,6 +64,12 @@ private struct Learner3DWindowContent: View {
             .padding(.bottom, AppSpacing.md)
             .offset(y: 16)
         }
+        .ornament(attachmentAnchor: .scene(.trailing)) {
+            if content?.kind == .patternAnimation {
+                WeavingProxyLegend()
+                    .padding(.leading, AppSpacing.sm)
+            }
+        }
     }
 
     private var rotationGesture: some Gesture {
@@ -307,5 +313,57 @@ private struct ModelControlButton: View {
         }
         .buttonStyle(.plain)
         .foregroundStyle(AppColor.textPrimary)
+    }
+}
+
+private struct WeavingProxyLegend: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            LegendRow(symbol: .circle(.blue), text: "Blue — Left hand proxy")
+            LegendRow(symbol: .circle(.green), text: "Green — Right hand proxy")
+            LegendRow(symbol: .triangle(.gray), text: "Grey — Weaving tool")
+        }
+        .font(AppFont.caption)
+        .foregroundStyle(AppColor.textPrimary.opacity(0.82))
+        .padding(AppSpacing.sm)
+        .background(AppColor.surface.opacity(0.22))
+        .glassBackgroundEffect(in: .rect(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(AppColor.border.opacity(0.55), lineWidth: 1)
+        )
+    }
+}
+
+private struct LegendRow: View {
+    let symbol: LegendSymbol
+    let text: LocalizedStringResource
+
+    var body: some View {
+        HStack(spacing: AppSpacing.xs) {
+            symbol.view
+                .frame(width: 10, height: 10)
+            Text(text)
+                .lineLimit(1)
+        }
+    }
+}
+
+private enum LegendSymbol {
+    case circle(Color)
+    case triangle(Color)
+
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case .circle(let color):
+            Circle()
+                .fill(color)
+        case .triangle(let color):
+            Image(systemName: "triangle.fill")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(color)
+        }
     }
 }

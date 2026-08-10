@@ -262,6 +262,8 @@ private struct PatternIcon: View {
 }
 
 private struct FromOurWeaverCard: View {
+    @Environment(AppAudioManager.self) private var audioManager
+
     @State private var player: AVPlayer?
     @State private var didFailToLoadVideo = false
 
@@ -289,6 +291,13 @@ private struct FromOurWeaverCard: View {
                 .strokeBorder(.white.opacity(0.14), lineWidth: 1)
         )
         .onDisappear(perform: stopVideo)
+        .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)) { notification in
+            guard let currentItem = player?.currentItem,
+                  notification.object as? AVPlayerItem === currentItem else {
+                return
+            }
+            finishVideo()
+        }
     }
 
     private var content: some View {
@@ -360,12 +369,23 @@ private struct FromOurWeaverCard: View {
         }
 
         didFailToLoadVideo = false
-        player = AVPlayer(url: url)
+        audioManager.prepareForVideoPlayback()
+        let player = AVPlayer(url: url)
+        player.isMuted = false
+        player.volume = 1.0
+        self.player = player
+        audioManager.duckForVideoPlayback()
     }
 
     private func stopVideo() {
         player?.pause()
         player = nil
+        audioManager.restoreBGMVolume()
+    }
+
+    private func finishVideo() {
+        player = nil
+        audioManager.restoreBGMVolume()
     }
 }
 

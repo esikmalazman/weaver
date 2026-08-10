@@ -274,6 +274,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weaver/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "neew weave bgm";
 				INFOPLIST_KEY_NSHandsTrackingUsageDescription = "CraftWeave uses hand tracking to record your hand and finger movements while weaving.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Weaver records artisan voice notes during hand technique recordings so replay can show transcript captions.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Weaver transcribes artisan voice notes from technique recordings so learners can read captions during replay.";
@@ -305,6 +306,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = weaver/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "neew weave bgm";
 				INFOPLIST_KEY_NSHandsTrackingUsageDescription = "CraftWeave uses hand tracking to record your hand and finger movements while weaving.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Weaver records artisan voice notes during hand technique recordings so replay can show transcript captions.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Weaver transcribes artisan voice notes from technique recordings so learners can read captions during replay.";

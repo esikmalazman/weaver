@@ -10,8 +10,22 @@ enum PracticeImmersiveSpace {
 
 struct PracticeCheckpoint: Identifiable, Equatable {
     let id: Int
-    let position: SIMD3<Float>
+    let localPosition: SIMD3<Float>
     let guidance: String
+
+    var worldPosition: SIMD3<Float> {
+        PracticeWeaveLayout.worldPosition(for: localPosition)
+    }
+}
+
+enum PracticeWeaveLayout {
+    static let rootPosition = SIMD3<Float>(0, 1.18, -0.48)
+    static let rootOrientation = simd_quatf(angle: .pi / 6, axis: [1, 0, 0])
+
+    static func worldPosition(for localPosition: SIMD3<Float>) -> SIMD3<Float> {
+        let rotated = rootOrientation.act(localPosition)
+        return rootPosition + rotated
+    }
 }
 
 @MainActor
@@ -32,14 +46,14 @@ final class PracticeViewModel {
     private(set) var statusText = "Open practice to begin."
 
     let checkpoints: [PracticeCheckpoint] = [
-        PracticeCheckpoint(id: 0, position: [-0.28, 1.08, -0.58], guidance: "Move under"),
-        PracticeCheckpoint(id: 1, position: [-0.20, 1.14, -0.58], guidance: "Lift over"),
-        PracticeCheckpoint(id: 2, position: [-0.12, 1.08, -0.58], guidance: "Continue"),
-        PracticeCheckpoint(id: 3, position: [-0.04, 1.14, -0.58], guidance: "Move under"),
-        PracticeCheckpoint(id: 4, position: [0.04, 1.08, -0.58], guidance: "Lift over"),
-        PracticeCheckpoint(id: 5, position: [0.12, 1.14, -0.58], guidance: "Continue"),
-        PracticeCheckpoint(id: 6, position: [0.20, 1.08, -0.58], guidance: "Move under"),
-        PracticeCheckpoint(id: 7, position: [0.28, 1.14, -0.58], guidance: "Lift over")
+        PracticeCheckpoint(id: 0, localPosition: [-0.30, 0.035, 0.06], guidance: "Lift over"),
+        PracticeCheckpoint(id: 1, localPosition: [-0.21, -0.026, -0.055], guidance: "Move under"),
+        PracticeCheckpoint(id: 2, localPosition: [-0.12, 0.035, 0.06], guidance: "Lift over"),
+        PracticeCheckpoint(id: 3, localPosition: [-0.03, -0.026, -0.055], guidance: "Move under"),
+        PracticeCheckpoint(id: 4, localPosition: [0.06, 0.035, 0.06], guidance: "Lift over"),
+        PracticeCheckpoint(id: 5, localPosition: [0.15, -0.026, -0.055], guidance: "Move under"),
+        PracticeCheckpoint(id: 6, localPosition: [0.24, 0.035, 0.06], guidance: "Lift over"),
+        PracticeCheckpoint(id: 7, localPosition: [0.32, -0.026, -0.055], guidance: "Move under")
     ]
 
     private let handTrackingSession = HandTrackingSession()
@@ -116,13 +130,13 @@ final class PracticeViewModel {
             return
         }
 
-        if simd_distance(fingertip, checkpoint.position) <= checkpointThreshold {
+        if simd_distance(fingertip, checkpoint.worldPosition) <= checkpointThreshold {
             completeCurrentCheckpoint(checkpoint)
         }
     }
 
     private func completeCurrentCheckpoint(_ checkpoint: PracticeCheckpoint) {
-        completedPulsePosition = checkpoint.position
+        completedPulsePosition = checkpoint.localPosition
         clearPulseTask?.cancel()
         clearPulseTask = Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(350))
@@ -263,6 +277,7 @@ private struct PracticeControls: View {
 struct PracticeImmersiveView: View {
     @Environment(PracticeViewModel.self) private var viewModel
     @State private var sceneRoot = Entity()
+    @State private var weaveRoot = Entity()
     @State private var checkpointEntity: ModelEntity?
     @State private var completedEntity: ModelEntity?
     @State private var didBuildScene = false
@@ -286,24 +301,28 @@ struct PracticeImmersiveView: View {
         let horizontalMaterial = SimpleMaterial(color: .systemBrown, roughness: 0.45, isMetallic: false)
         let verticalMaterial = SimpleMaterial(color: .systemYellow, roughness: 0.55, isMetallic: false)
 
+        weaveRoot.position = PracticeWeaveLayout.rootPosition
+        weaveRoot.orientation = PracticeWeaveLayout.rootOrientation
+        sceneRoot.addChild(weaveRoot)
+
         for index in 0..<4 {
-            let y = 1.02 + Float(index) * 0.08
+            let z = -0.18 + Float(index) * 0.12
             let strand = ModelEntity(
                 mesh: .generateBox(size: [0.68, 0.018, 0.018]),
                 materials: [horizontalMaterial]
             )
-            strand.position = [0, y, -0.62]
-            sceneRoot.addChild(strand)
+            strand.position = [0, 0, z]
+            weaveRoot.addChild(strand)
         }
 
         for index in 0..<5 {
             let x = -0.28 + Float(index) * 0.14
             let strand = ModelEntity(
-                mesh: .generateBox(size: [0.018, 0.32, 0.018]),
+                mesh: .generateBox(size: [0.018, 0.018, 0.44]),
                 materials: [verticalMaterial]
             )
-            strand.position = [x, 1.14, -0.61]
-            sceneRoot.addChild(strand)
+            strand.position = [x, 0.018, 0]
+            weaveRoot.addChild(strand)
         }
     }
 
@@ -312,7 +331,7 @@ struct PracticeImmersiveView: View {
             let entity = checkpointEntity ?? makeCheckpointEntity(color: .systemCyan, radius: 0.026)
             checkpointEntity = entity
             addIfNeeded(entity)
-            entity.position = checkpoint.position
+            entity.position = checkpoint.localPosition
             entity.isEnabled = true
         } else {
             checkpointEntity?.isEnabled = false
@@ -338,7 +357,7 @@ struct PracticeImmersiveView: View {
 
     private func addIfNeeded(_ entity: Entity) {
         guard entity.parent == nil else { return }
-        sceneRoot.addChild(entity)
+        weaveRoot.addChild(entity)
     }
 }
 

@@ -22,22 +22,40 @@ enum HomeMode: CaseIterable, Identifiable {
 }
 
 struct HomeView: View {
+    @Environment(AppAudioManager.self) private var audioManager
+
     var body: some View {
         NavigationStack {
             CraftWeaveLandingPanel()
                 .padding(AppSpacing.xxl)
                 .navigationBarTitleDisplayMode(.inline)
         }
+        .task {
+         
+        }
+        .onAppear {
+            DispatchQueue.global().async {
+                self.audioManager.startBGMIfNeeded()
+            }
+            
+           
+        }
     }
 }
 
 private struct CraftWeaveLandingPanel: View {
+    @Environment(AppAudioManager.self) private var audioManager
+
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.xl) {
             LandingHeader()
             LandingIntro()
             PrimaryModeCards()
             HeritageNavigationSection()
+            Text(audioManager.statusText)
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textPrimary.opacity(0.42))
+                .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding(.horizontal, 48)
         .padding(.vertical, 44)

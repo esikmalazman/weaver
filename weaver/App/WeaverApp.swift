@@ -6,6 +6,7 @@ struct WeaverApp: App {
     @State private var appModel = AppModel()
     @State private var learner3DViewModel = Learner3DViewModel()
     @State private var practiceViewModel = PracticeViewModel()
+    @State private var audioManager = AppAudioManager()
     
     var body: some Scene {
         WindowGroup(id: WeaverWindow.main) {
@@ -14,6 +15,7 @@ struct WeaverApp: App {
                 .environment(appModel)
                 .environment(learner3DViewModel)
                 .environment(practiceViewModel)
+                .environment(audioManager)
         }
 
         WindowGroup(id: WeaverWindow.model3D) {
